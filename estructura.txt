@@ -1,0 +1,28 @@
+push_swap/
+├── Makefile
+├── README.md
+├── libft/                     (si la usáis)
+├── includes/
+│   └── push_swap.h
+├── src/
+│   ├── main.c
+│   ├── parsing/
+│   │   ├── parse_args.c       (validar enteros, duplicados, overflow)
+│   │   ├── parse_flags.c      (--simple/--medium/--complex/--adaptive/--bench)
+│   │   └── parse_errors.c
+│   ├── stack_ops/
+│   │   ├── ops_swap.c         (sa, sb, ss)
+│   │   ├── ops_push.c         (pa, pb)
+│   │   ├── ops_rotate.c       (ra, rb, rr)
+│   │   └── ops_reverse.c      (rra, rrb, rrr)
+│   ├── algorithms/
+│   │   ├── disorder_index.c   (el cálculo del desorden)
+│   │   ├── simple_sort.c      (O(n²))
+│   │   ├── medium_sort.c      (O(n√n))
+│   │   ├── complex_sort.c     (O(n log n))
+│   │   ├── adaptive_sort.c    (la selección según desorden)
+│   │   └── sort_utils.c       (helpers compartidos: min/max, size, etc.)
+│   └── bench/
+│       └── bench.c            (modo --bench, va a stderr)
+└── checker_bonus/              (bonus, ver nota abajo)
+    └── ...
