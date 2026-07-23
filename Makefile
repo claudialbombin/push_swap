@@ -18,6 +18,7 @@ SRC =	src/main.c \
 	src/stack_ops/ops_swap.c \
 	src/stack_ops/ops_rotate.c \
 	src/stack_ops/ops_reverse.c \
+	src/algorithms/linear_sort.c \
 	src/algorithms/simple_sort.c \
 	src/algorithms/medium_sort.c \
 	src/algorithms/complex_sort.c \
