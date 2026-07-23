@@ -25,13 +25,16 @@
 //     return (1);
 // }
 
-int	parse_numbers(char **argv, t_stack *a)
+int	parse_numbers(char **argv, t_stack **a)
 {
 	int		i;
 	long	nbr;
-	t_node	*new_node;
+	t_stack	*new_node;
+	t_stack	*tail;
 
 	i = 0;
+	tail = NULL;
+	*a = NULL;
 	while (argv[i] != NULL)
 	{
 		if (!is_number(argv[i]))
@@ -42,10 +45,10 @@ int	parse_numbers(char **argv, t_stack *a)
 		new_node = create_node((int)nbr);
 		if (!new_node)
 			return (0);
-		add_node(a, new_node);
+		add_node(a, &tail, new_node);
 		i++;
 	}
-	if (has_duplicates(a))
+	if (has_duplicates(*a))
 		return (0);
 	return (1);
 }
@@ -81,12 +84,12 @@ int is_int_range(long value)
 
 int has_duplicates(t_stack *a)
 {
-    t_node *current;
-    t_node *check;
-   
-    if (a == NULL || a->top == NULL)
+    t_stack *current;
+    t_stack *check;
+
+    if (a == NULL)
         return (0);
-    current = a->top; // Empiezo en el nodo de arriba
+    current = a; // Empiezo en el nodo de arriba
     while (current != NULL) // Bucle externo
     {
         check = current->next;
