@@ -2,10 +2,11 @@
 
 long ft_atol(const char *str)
 {
-    int i;
-    int sign;
+    int  i;
+    int  sign;
+    int  digit;
     long result;
-   
+
     i = 0;
     sign = 1;
     result = 0;
@@ -17,9 +18,12 @@ long ft_atol(const char *str)
             sign = -1;
         i++;
     }
-    while(str[i] >= '0' && str[i] <= '9')
+    while (str[i] >= '0' && str[i] <= '9')
     {
-        result = result * 10 + (str[i] - '0');
+        digit = str[i] - '0';
+        if (result > (LONG_MAX - digit) / 10)
+            return (sign == 1 ? LONG_MAX : LONG_MIN);
+        result = result * 10 + digit;
         i++;
     }
     return (result * sign);
