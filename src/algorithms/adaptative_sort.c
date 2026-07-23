@@ -26,7 +26,7 @@ void	ft_adaptive_sort(t_stack **a, t_stack **b)
 		return ;
 	disorder = compute_disorder(*a);
 	if (disorder < 0.2)
-		ft_simple_sort(a, b);
+		ft_linear_sort(a, b);
 	else if (disorder < 0.5)
 		ft_medium_sort(a, b);
 	else
