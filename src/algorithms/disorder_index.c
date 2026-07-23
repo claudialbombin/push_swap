@@ -13,25 +13,6 @@
 #include "push_swap.h"
 
 /*
-** Counts how many nodes the stack has.
-** We need this to compute total_pairs with the combinatorics
-** formula n * (n - 1) / 2, instead of counting pairs inside
-** the loop like the subject's pseudocode does.
-*/
-static int	ft_stack_size(t_stack *stack)
-{
-	int	size;
-
-	size = 0;
-	while (stack)
-	{
-		size++;
-		stack = stack->next;
-	}
-	return (size);
-}
-
-/*
 ** Goes through every pair (i, j) with j > i, comparing values.
 ** Each time a bigger value appears before a smaller one, that
 ** counts as an "inversion" (an ordering mistake).
