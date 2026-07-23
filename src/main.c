@@ -28,7 +28,7 @@ static char	*strategy_label(t_strategy strategy, double disorder)
 	if (strategy == STRAT_COMPLEX)
 		return ("Complex / O(n log n)");
 	if (disorder < 0.2)
-		return ("Adaptive / O(n^2)");
+		return ("Adaptive / O(n)");
 	if (disorder < 0.5)
 		return ("Adaptive / O(n * sqrt(n))");
 	return ("Adaptive / O(n log n)");
