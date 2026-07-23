@@ -112,6 +112,7 @@ void		ft_rrb(t_stack **b, int print);
 void		ft_rrr(t_stack **a, t_stack **b, int print);
 
 /* Algorithms */
+void		ft_linear_sort(t_stack **a, t_stack **b);
 void		ft_simple_sort(t_stack **a, t_stack **b);
 void		ft_medium_sort(t_stack **a, t_stack **b);
 void		ft_complex_sort(t_stack **a, t_stack **b);
