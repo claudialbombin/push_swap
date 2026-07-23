@@ -6,7 +6,7 @@
 /*   By: clopez-b <clopez-b@student.42madrid.com>    +#+  +:+       +#+       */
 /*                                                 +#+#+#+#+#+   +#+          */
 /*   Created: 2026/07/22 00:00:00 by clopez-b          #+#    #+#             */
-/*   Updated: 2026/07/22 00:00:00 by clopez-b         ###   ########.fr       */
+/*   Updated: 2026/07/23 00:00:00 by clopez-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,16 @@ static char	*strategy_label(t_strategy strategy, double disorder)
 ** Runs whichever sorting strategy the user picked (or the
 ** adaptive one by default).
 */
-static void	execute_strategy(t_stack **a, t_stack **b, t_strategy strategy,
-		t_bench *bench)
+static void	execute_strategy(t_stack **a, t_stack **b, t_strategy strategy)
 {
 	if (strategy == STRAT_SIMPLE)
-		ft_simple_sort(a, b, bench);
+		ft_simple_sort(a, b);
 	else if (strategy == STRAT_MEDIUM)
-		ft_medium_sort(a, b, bench);
+		ft_medium_sort(a, b);
 	else if (strategy == STRAT_COMPLEX)
-		ft_complex_sort(a, b, bench);
+		ft_complex_sort(a, b);
 	else
-		ft_adaptive_sort(a, b, bench);
+		ft_adaptive_sort(a, b);
 }
 
 int	main(int argc, char **argv)
@@ -58,16 +57,22 @@ int	main(int argc, char **argv)
 	t_bench		bench;
 	t_strategy	strategy;
 	double		disorder;
+	int			use_bench;
 
 	if (argc <= 1)
 		return (0);
-	ft_bench_init(&bench);
 	a = ft_build_stack(argc, argv);
 	b = NULL;
 	strategy = ft_parse_strategy(argc, argv);
+	use_bench = ft_has_bench_flag(argc, argv);
 	disorder = compute_disorder(a);
-	execute_strategy(&a, &b, strategy, &bench);
-	if (ft_has_bench_flag(argc, argv))
+	if (use_bench)
+	{
+		ft_bench_init(&bench);
+		g_bench = &bench;
+	}
+	execute_strategy(&a, &b, strategy);
+	if (use_bench)
 		ft_print_bench(disorder, strategy_label(strategy, disorder), &bench);
 	ft_free_stack(&a);
 	ft_free_stack(&b);
