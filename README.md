@@ -157,15 +157,17 @@ correct.
 ### Medium sort — O(n√n)
 
 Each value is mapped to its rank (0 to n-1), and ranks are split into
-approximately √n chunks. Each chunk is processed in a single left-to-right
-pass over `a`: matching elements are pushed to `b` and locally inserted into
-their correct spot within that chunk (using `sb`/`rb`/`rrb`); the rest are
-rotated with `ra` to be revisited in a later chunk pass.
+approximately √n chunks. Chunks are processed from lowest to highest rank;
+within each chunk, the algorithm repeatedly scans `a` for the node with the
+smallest remaining rank in that chunk's range, rotates it to the top
+(`ra`/`rra`, whichever is shorter), and pushes it to `b`. Once every chunk
+has gone through, `b` holds every rank in descending order (highest on
+top) — ready to be unloaded straight back into `a` with `pa`, restoring
+ascending order.
 
 - **Space:** O(1) extra.
-- **Time (operations):** √n chunk passes, each O(n) to scan `a` plus O(√n)
-  insertion cost per element within the chunk (√n elements per chunk), giving
-  O(n√n) operations overall.
+- **Time (operations):** √n chunks, each selecting and rotating up to √n
+  elements, giving O(n√n) operations overall.
 
 ### Complex sort — O(n log n)
 
@@ -193,7 +195,7 @@ at the start:
 
 > **Erratum note:** the written subject states that low disorder (`< 0.2`)
 > should use O(n). This was confirmed by staff during a live correction
-> session to be a true in the subject text: the intended mapping is low
+> session to be a typo in the subject text: the intended mapping is low
 > disorder → O(n), medium disorder → O(n√n), high disorder → O(n log n),
 > which is the mapping implemented and described above.
 
