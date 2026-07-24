@@ -17,10 +17,14 @@
 ** the label is fixed, but for --adaptive we need to repeat the
 ** same disorder thresholds used inside ft_adaptive_sort, since
 ** that function only sorts, it doesn't report which internal
-** method it picked.
+** method it picked. Stacks of SMALL_N_MAX elements or fewer always
+** go through ft_optimal_sort instead (see execute_strategy), so
+** their label overrides everything else, chosen strategy included.
 */
-static char	*strategy_label(t_strategy strategy, double disorder)
+static char	*strategy_label(t_strategy strategy, double disorder, int size)
 {
+	if (size <= SMALL_N_MAX)
+		return ("Optimal (exhaustive search)");
 	if (strategy == STRAT_SIMPLE)
 		return ("Simple / O(n^2)");
 	if (strategy == STRAT_MEDIUM)
@@ -39,11 +43,19 @@ static char	*strategy_label(t_strategy strategy, double disorder)
 ** adaptive one by default). bench always points at a valid,
 ** zero-initialized struct - the counters just go unused (and
 ** unprinted) when --bench wasn't passed.
+**
+** Stacks of SMALL_N_MAX elements or fewer always go through the
+** exhaustive-search optimal sort instead, regardless of the chosen
+** strategy: at that size the state space is tiny enough to search
+** in full, so there's no reason to settle for any strategy's
+** general-purpose (and here, non-optimal) behaviour.
 */
 static void	execute_strategy(t_stack **a, t_stack **b, t_strategy strategy,
 		t_bench *bench)
 {
-	if (strategy == STRAT_SIMPLE)
+	if (ft_stack_size(*a) <= SMALL_N_MAX)
+		ft_optimal_sort(a, b, bench);
+	else if (strategy == STRAT_SIMPLE)
 		ft_simple_sort(a, b, bench);
 	else if (strategy == STRAT_MEDIUM)
 		ft_medium_sort(a, b, bench);
@@ -70,7 +82,8 @@ int	main(int argc, char **argv)
 	ft_bench_init(&bench);
 	execute_strategy(&a, &b, strategy, &bench);
 	if (ft_has_bench_flag(argc, argv))
-		ft_print_bench(disorder, strategy_label(strategy, disorder), &bench);
+		ft_print_bench(disorder,
+			strategy_label(strategy, disorder, ft_stack_size(a)), &bench);
 	ft_free_stack(&a);
 	ft_free_stack(&b);
 	return (0);
