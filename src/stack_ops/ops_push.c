@@ -14,24 +14,24 @@ static void	move_top(t_stack **dest, t_stack **src)
 	*dest = node;
 }
 
-void	ft_pa(t_stack **a, t_stack **b, int print)
+void	ft_pa(t_stack **a, t_stack **b, int print, t_bench *bench)
 {
 	if (!*b)
 		return ;
 	move_top(a, b);
-	if (g_bench)
-		g_bench->pa++;
+	if (bench)
+		bench->pa++;
 	if (print)
 		write(1, "pa\n", 3);
 }
 
-void	ft_pb(t_stack **a, t_stack **b, int print)
+void	ft_pb(t_stack **a, t_stack **b, int print, t_bench *bench)
 {
 	if (!*a)
 		return ;
 	move_top(b, a);
-	if (g_bench)
-		g_bench->pb++;
+	if (bench)
+		bench->pb++;
 	if (print)
 		write(1, "pb\n", 3);
 }

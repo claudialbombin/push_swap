@@ -22,24 +22,24 @@ static void	rotate_down(t_stack **s)
 	*s = current;
 }
 
-void	ft_rra(t_stack **a, int print)
+void	ft_rra(t_stack **a, int print, t_bench *bench)
 {
 	if (!*a || !(*a)->next)
 		return ;
 	rotate_down(a);
-	if (g_bench)
-		g_bench->rra++;
+	if (bench)
+		bench->rra++;
 	if (print)
 		write(1, "rra\n", 4);
 }
 
-void	ft_rrb(t_stack **b, int print)
+void	ft_rrb(t_stack **b, int print, t_bench *bench)
 {
 	if (!*b || !(*b)->next)
 		return ;
 	rotate_down(b);
-	if (g_bench)
-		g_bench->rrb++;
+	if (bench)
+		bench->rrb++;
 	if (print)
 		write(1, "rrb\n", 4);
 }
@@ -48,14 +48,14 @@ void	ft_rrb(t_stack **b, int print)
 ** rrr does rra and rrb at the same time, printing (and counting)
 ** just one combined operation instead of two.
 */
-void	ft_rrr(t_stack **a, t_stack **b, int print)
+void	ft_rrr(t_stack **a, t_stack **b, int print, t_bench *bench)
 {
 	if (*a && (*a)->next)
 		rotate_down(a);
 	if (*b && (*b)->next)
 		rotate_down(b);
-	if (g_bench)
-		g_bench->rrr++;
+	if (bench)
+		bench->rrr++;
 	if (print)
 		write(1, "rrr\n", 4);
 }
