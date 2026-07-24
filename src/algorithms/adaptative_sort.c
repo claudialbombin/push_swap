@@ -18,7 +18,7 @@
 ** log n) sort if that guess turns out wrong), medium disorder
 ** uses the chunk-based sort, high disorder uses radix sort.
 */
-void	ft_adaptive_sort(t_stack **a, t_stack **b)
+void	ft_adaptive_sort(t_stack **a, t_stack **b, t_bench *bench)
 {
 	double	disorder;
 
@@ -26,9 +26,9 @@ void	ft_adaptive_sort(t_stack **a, t_stack **b)
 		return ;
 	disorder = compute_disorder(*a);
 	if (disorder < 0.2)
-		ft_linear_sort(a, b);
+		ft_linear_sort(a, b, bench);
 	else if (disorder < 0.5)
-		ft_medium_sort(a, b);
+		ft_medium_sort(a, b, bench);
 	else
-		ft_complex_sort(a, b);
+		ft_complex_sort(a, b, bench);
 }

@@ -16,24 +16,24 @@ static void	swap_top(t_stack **s)
 	*s = second;
 }
 
-void	ft_sa(t_stack **a, int print)
+void	ft_sa(t_stack **a, int print, t_bench *bench)
 {
 	if (!*a || !(*a)->next)
 		return ;
 	swap_top(a);
-	if (g_bench)
-		g_bench->sa++;
+	if (bench)
+		bench->sa++;
 	if (print)
 		write(1, "sa\n", 3);
 }
 
-void	ft_sb(t_stack **b, int print)
+void	ft_sb(t_stack **b, int print, t_bench *bench)
 {
 	if (!*b || !(*b)->next)
 		return ;
 	swap_top(b);
-	if (g_bench)
-		g_bench->sb++;
+	if (bench)
+		bench->sb++;
 	if (print)
 		write(1, "sb\n", 3);
 }
@@ -42,14 +42,14 @@ void	ft_sb(t_stack **b, int print)
 ** ss does sa and sb at the same time, printing (and counting)
 ** just one combined operation instead of two.
 */
-void	ft_ss(t_stack **a, t_stack **b, int print)
+void	ft_ss(t_stack **a, t_stack **b, int print, t_bench *bench)
 {
 	if (*a && (*a)->next)
 		swap_top(a);
 	if (*b && (*b)->next)
 		swap_top(b);
-	if (g_bench)
-		g_bench->ss++;
+	if (bench)
+		bench->ss++;
 	if (print)
 		write(1, "ss\n", 3);
 }
