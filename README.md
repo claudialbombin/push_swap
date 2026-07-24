@@ -136,6 +136,24 @@ into `a`, restoring ascending order.
   minimum search and up to O(n) for the rotation, giving O(n²) operations in
   the worst case.
 
+### Linear sort — O(n)
+
+Used only by the adaptive strategy's low-disorder branch, not exposed as its
+own flag. A stack this close to sorted is, in practice, either already sorted
+or the sorted sequence rotated by some offset (eg. the last k values moved in
+front of the rest) — and that specific shape can be fixed in true O(n):
+find the minimum and rotate it to the top in whichever direction is shorter.
+A fully general O(n) comparison sort cannot exist for every permutation in
+this disorder band (the disorder index only bounds the number of inversions,
+not the stack's shape), so as a correctness safety net, the rare low-disorder
+stack that turns out not to be a pure rotation falls back to the complex sort
+below instead — that path is no longer O(n), but the result is always
+correct.
+
+- **Space:** O(1) extra.
+- **Time (operations):** O(n) to find the minimum, O(n) to rotate it to the
+  top; O(n) overall whenever the input is in fact a rotated sorted sequence.
+
 ### Medium sort — O(n√n)
 
 Each value is mapped to its rank (0 to n-1), and ranks are split into
@@ -169,7 +187,7 @@ at the start:
 
 | Disorder range   | Strategy used | Complexity |
 |-------------------|--------------|------------|
-| `< 0.2`            | Simple sort   | O(n)      |
+| `< 0.2`            | Linear sort   | O(n)      |
 | `0.2` to `< 0.5`   | Medium sort   | O(n√n)     |
 | `>= 0.5`           | Complex sort  | O(n log n) |
 
@@ -189,13 +207,11 @@ at the start:
   randomness gets the strategy with the strongest worst-case guarantee.
 - **`0.2` (low disorder cutoff):** below this point, fewer than one in five
   possible pairs are inverted, which in practice corresponds to inputs that
-  are already nearly sorted (a handful of misplaced values, or a short local
-  perturbation). Simple sort's actual operation count scales with how far
-  values are from their sorted position, not just with `n`; on this kind of
-  input the rotation distances involved are small, so despite its O(n²)
-  worst-case class, it stays cheap in practice for this specific regime while
-  remaining a fully deterministic, always-correct choice with no need to
-  detect specific structural patterns.
+  are already nearly sorted or the sorted sequence rotated by some offset —
+  exactly the shape linear sort fixes in true O(n). Above this point the
+  input is more likely to contain a structure linear sort can't guarantee to
+  fix in one pass, so it hands off to a strategy with a general worst-case
+  guarantee instead.
 - **`[0.2, 0.5)` (medium band):** the remaining range is handled by the
   chunk-based sort, giving a middle-ground operation count that fits inputs
   that are partially, but not extremely, shuffled.
