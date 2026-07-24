@@ -12,8 +12,6 @@
 
 #include "push_swap.h"
 
-t_bench	*g_bench = NULL;
-
 static int	ft_len(char *s)
 {
 	int	len;

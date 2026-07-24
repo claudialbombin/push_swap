@@ -6,87 +6,16 @@
 /*   By: clopez-b <clopez-b@student.42madrid.com>    +#+  +:+       +#+       */
 /*                                                 +#+#+#+#+#+   +#+          */
 /*   Created: 2026/07/23 00:00:00 by clopez-b          #+#    #+#             */
-/*   Updated: 2026/07/23 00:00:00 by clopez-b         ###   ########.fr       */
+/*   Updated: 2026/07/24 00:00:00 by clopez-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
 /*
-** Same rank trick as complex_sort: gives every node its rank
-** (0 to size - 1) instead of its raw value, so ranks can be
-** grouped into chunks.
-*/
-static void	assign_indexes(t_stack *a)
-{
-	t_stack	*current;
-	t_stack	*other;
-	int		count;
-
-	current = a;
-	while (current)
-	{
-		other = a;
-		count = 0;
-		while (other)
-		{
-			if (other->value < current->value)
-				count++;
-			other = other->next;
-		}
-		current->index = count;
-		current = current->next;
-	}
-}
-
-/*
-** Smallest chunk length whose square covers "size", so the
-** stack ends up split into roughly sqrt(size) chunks.
-*/
-static int	chunk_length(int size)
-{
-	int	chunk;
-
-	chunk = 1;
-	while (chunk * chunk < size)
-		chunk++;
-	return (chunk);
-}
-
-/*
-** Rotates a until "node" reaches the top, picking whichever
-** direction (ra or rra) needs fewer moves.
-*/
-static void	rotate_to_top(t_stack **a, t_stack *node)
-{
-	t_stack	*current;
-	int		pos;
-	int		size;
-
-	pos = 0;
-	current = *a;
-	while (current != node)
-	{
-		pos++;
-		current = current->next;
-	}
-	size = ft_stack_size(*a);
-	if (pos <= size - pos)
-	{
-		while (pos-- > 0)
-			ft_ra(a, 1);
-	}
-	else
-	{
-		pos = size - pos;
-		while (pos-- > 0)
-			ft_rra(a, 1);
-	}
-}
-
-/*
 ** Finds the node still in a with the smallest rank that falls
-** inside [lower, upper], or NULL if the chunk is exhausted.
+** inside [lower, upper], or NULL if the chunk is exhausted (or,
+** with upper == INT_MAX, NULL once a itself is exhausted).
 */
 static t_stack	*find_min_in_range(t_stack *a, int lower, int upper)
 {
@@ -104,6 +33,34 @@ static t_stack	*find_min_in_range(t_stack *a, int lower, int upper)
 }
 
 /*
+** Pushes every element of one chunk into b, ranks low to high,
+** before moving on to the next chunk. Once every chunk has gone
+** through, b ends up with the highest rank on top - ready to be
+** unloaded straight into a.
+*/
+static void	sort_by_chunks(t_stack **a, t_stack **b, int chunk,
+		t_bench *bench)
+{
+	int		lower;
+	int		upper;
+	t_stack	*node;
+
+	lower = 0;
+	while (find_min_in_range(*a, lower, INT_MAX))
+	{
+		upper = lower + chunk - 1;
+		node = find_min_in_range(*a, lower, upper);
+		while (node)
+		{
+			rotate_node_to_top(a, node, bench);
+			ft_pb(a, b, 1, bench);
+			node = find_min_in_range(*a, lower, upper);
+		}
+		lower += chunk;
+	}
+}
+
+/*
 ** O(n * sqrt(n)) sort: splits the ranks into chunks of about
 ** sqrt(n) elements. Chunks are processed from lowest to highest
 ** rank and, inside a chunk, ranks are also pushed low to high.
@@ -111,34 +68,17 @@ static t_stack	*find_min_in_range(t_stack *a, int lower, int upper)
 ** exactly what's needed to unload it back into a in ascending
 ** order with straight pa calls.
 */
-void	ft_medium_sort(t_stack **a, t_stack **b)
+void	ft_medium_sort(t_stack **a, t_stack **b, t_bench *bench)
 {
-	int		size;
-	int		chunk;
-	int		lower;
-	int		upper;
-	t_stack	*node;
+	int	size;
+	int	chunk;
 
 	if (ft_is_sorted(*a))
 		return ;
 	size = ft_stack_size(*a);
-	assign_indexes(*a);
+	assign_ranks(*a);
 	chunk = chunk_length(size);
-	lower = 0;
-	while (lower < size)
-	{
-		upper = lower + chunk - 1;
-		if (upper > size - 1)
-			upper = size - 1;
-		node = find_min_in_range(*a, lower, upper);
-		while (node)
-		{
-			rotate_to_top(a, node);
-			ft_pb(a, b, 1);
-			node = find_min_in_range(*a, lower, upper);
-		}
-		lower += chunk;
-	}
+	sort_by_chunks(a, b, chunk, bench);
 	while (*b)
-		ft_pa(a, b, 1);
+		ft_pa(a, b, 1, bench);
 }

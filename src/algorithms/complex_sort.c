@@ -6,7 +6,7 @@
 /*   By: clopez-b <clopez-b@student.42madrid.com>    +#+  +:+       +#+       */
 /*                                                 +#+#+#+#+#+   +#+          */
 /*   Created: 2026/07/22 00:00:00 by clopez-b          #+#    #+#             */
-/*   Updated: 2026/07/22 00:00:00 by clopez-b         ###   ########.fr       */
+/*   Updated: 2026/07/24 00:00:00 by clopez-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,21 +76,23 @@ static void	assign_indexes(t_stack *a)
 ** fully drained back into a, which places the "0" group on top
 ** while keeping both groups in their original relative order.
 */
-static void	do_bit_pass(t_stack **a, t_stack **b, int bit, int size)
+static void	do_bit_pass(t_stack **a, t_stack **b, int bit, t_bench *bench)
 {
 	int	i;
+	int	size;
 
+	size = ft_stack_size(*a);
 	i = 0;
 	while (i < size)
 	{
 		if (get_bit((*a)->index, bit) == 0)
-			ft_pb(a, b, 1);
+			ft_pb(a, b, 1, bench);
 		else
-			ft_ra(a, 1);
+			ft_ra(a, 1, bench);
 		i++;
 	}
 	while (*b)
-		ft_pa(a, b, 1);
+		ft_pa(a, b, 1, bench);
 }
 
 /*
@@ -100,7 +102,7 @@ static void	do_bit_pass(t_stack **a, t_stack **b, int bit, int size)
 ** pass has the strongest effect on final position, the result
 ** ends up fully sorted ascending, smallest on top.
 */
-void	ft_complex_sort(t_stack **a, t_stack **b)
+void	ft_complex_sort(t_stack **a, t_stack **b, t_bench *bench)
 {
 	int	size;
 	int	max_bits;
@@ -114,7 +116,7 @@ void	ft_complex_sort(t_stack **a, t_stack **b)
 	bit = 0;
 	while (bit < max_bits)
 	{
-		do_bit_pass(a, b, bit, size);
+		do_bit_pass(a, b, bit, bench);
 		bit++;
 	}
 }

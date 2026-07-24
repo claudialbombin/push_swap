@@ -1,6 +1,5 @@
 #include "push_swap.h"
 
-
 static int	ft_word_len(char const *str, char c)
 {
 	int	i;

@@ -1,18 +1,18 @@
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdbool.h>
-#include <limits.h>
-#include <stddef.h>
-#include <stdint.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <stdbool.h>
+# include <limits.h>
+# include <stddef.h>
+# include <stdint.h>
 
-#define NONE        0
-#define SIMPLE      1
-#define MEDIUM      2
-#define COMPLEX     3
-#define ADAPTIVE    4
+# define NONE        0
+# define SIMPLE      1
+# define MEDIUM      2
+# define COMPLEX     3
+# define ADAPTIVE    4
 
 typedef enum e_strategy
 {
@@ -44,8 +44,6 @@ typedef struct s_bench
 	int	rrb;
 	int	rrr;
 }	t_bench;
-
-extern t_bench	*g_bench;
 
 /* Parser flags */
 int			flag_duplicates(char *flag, int strategy, int bench);
@@ -99,24 +97,29 @@ void		ft_free_stack(t_stack **stack);
 double		compute_disorder(t_stack *a);
 
 /* Stack ops */
-void		ft_sa(t_stack **a, int print);
-void		ft_sb(t_stack **b, int print);
-void		ft_ss(t_stack **a, t_stack **b, int print);
-void		ft_pa(t_stack **a, t_stack **b, int print);
-void		ft_pb(t_stack **a, t_stack **b, int print);
-void		ft_ra(t_stack **a, int print);
-void		ft_rb(t_stack **b, int print);
-void		ft_rr(t_stack **a, t_stack **b, int print);
-void		ft_rra(t_stack **a, int print);
-void		ft_rrb(t_stack **b, int print);
-void		ft_rrr(t_stack **a, t_stack **b, int print);
+void		ft_sa(t_stack **a, int print, t_bench *bench);
+void		ft_sb(t_stack **b, int print, t_bench *bench);
+void		ft_ss(t_stack **a, t_stack **b, int print, t_bench *bench);
+void		ft_pa(t_stack **a, t_stack **b, int print, t_bench *bench);
+void		ft_pb(t_stack **a, t_stack **b, int print, t_bench *bench);
+void		ft_ra(t_stack **a, int print, t_bench *bench);
+void		ft_rb(t_stack **b, int print, t_bench *bench);
+void		ft_rr(t_stack **a, t_stack **b, int print, t_bench *bench);
+void		ft_rra(t_stack **a, int print, t_bench *bench);
+void		ft_rrb(t_stack **b, int print, t_bench *bench);
+void		ft_rrr(t_stack **a, t_stack **b, int print, t_bench *bench);
 
 /* Algorithms */
-void		ft_linear_sort(t_stack **a, t_stack **b);
-void		ft_simple_sort(t_stack **a, t_stack **b);
-void		ft_medium_sort(t_stack **a, t_stack **b);
-void		ft_complex_sort(t_stack **a, t_stack **b);
-void		ft_adaptive_sort(t_stack **a, t_stack **b);
+void		ft_linear_sort(t_stack **a, t_stack **b, t_bench *bench);
+void		ft_simple_sort(t_stack **a, t_stack **b, t_bench *bench);
+void		ft_medium_sort(t_stack **a, t_stack **b, t_bench *bench);
+void		ft_complex_sort(t_stack **a, t_stack **b, t_bench *bench);
+void		ft_adaptive_sort(t_stack **a, t_stack **b, t_bench *bench);
+
+/* Medium sort helpers */
+void		assign_ranks(t_stack *a);
+int			chunk_length(int size);
+void		rotate_node_to_top(t_stack **a, t_stack *node, t_bench *bench);
 
 /* Bench */
 void		ft_bench_init(t_bench *bench);
