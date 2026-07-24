@@ -12,6 +12,7 @@ SRC =	src/main.c \
 	src/parsing/errors_stack.c \
 	src/parsing/split.c \
 	src/parsing/utils.c \
+	src/parsing/ft_atol.c \
 	src/parsing/utils_parser_num.c \
 	src/parsing/libft_utils.c \
 	src/stack_ops/ops_push.c \
@@ -21,6 +22,7 @@ SRC =	src/main.c \
 	src/algorithms/linear_sort.c \
 	src/algorithms/simple_sort.c \
 	src/algorithms/medium_sort.c \
+	src/algorithms/medium_sort_utils.c \
 	src/algorithms/complex_sort.c \
 	src/algorithms/adaptative_sort.c \
 	src/algorithms/sort_utils.c \

@@ -16,13 +16,13 @@
 ** Brings the node at "index" (from the top) to the top of a,
 ** choosing whichever rotation direction needs fewer moves.
 */
-static void	rotate_to_top(t_stack **a, int index, int size)
+static void	rotate_to_top(t_stack **a, int index, int size, t_bench *bench)
 {
 	if (index <= size - index)
 	{
 		while (index > 0)
 		{
-			ft_ra(a, 1);
+			ft_ra(a, 1, bench);
 			index--;
 		}
 	}
@@ -31,7 +31,7 @@ static void	rotate_to_top(t_stack **a, int index, int size)
 		index = size - index;
 		while (index > 0)
 		{
-			ft_rra(a, 1);
+			ft_rra(a, 1, bench);
 			index--;
 		}
 	}
@@ -44,7 +44,7 @@ static void	rotate_to_top(t_stack **a, int index, int size)
 ** at size 1 instead of moving it too. Finally, pushes
 ** everything back from b to a in the right order.
 */
-void	ft_simple_sort(t_stack **a, t_stack **b)
+void	ft_simple_sort(t_stack **a, t_stack **b, t_bench *bench)
 {
 	int	size;
 	int	index;
@@ -55,10 +55,10 @@ void	ft_simple_sort(t_stack **a, t_stack **b)
 	while (size > 1)
 	{
 		index = ft_min_index(*a);
-		rotate_to_top(a, index, size);
-		ft_pb(a, b, 1);
+		rotate_to_top(a, index, size, bench);
+		ft_pb(a, b, 1, bench);
 		size--;
 	}
 	while (*b)
-		ft_pa(a, b, 1);
+		ft_pa(a, b, 1, bench);
 }
