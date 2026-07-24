@@ -32,6 +32,11 @@ SRC =	src/main.c \
 	src/stack_ops/ops_rotate.c \
 	src/stack_ops/ops_reverse.c \
 	src/algorithms/linear_sort.c \
+	src/algorithms/small_sort.c \
+	src/algorithms/small_sort_bfs.c \
+	src/algorithms/small_sort_apply.c \
+	src/algorithms/small_sort_moves.c \
+	src/algorithms/small_sort_run.c \
 	src/algorithms/simple_sort.c \
 	src/algorithms/medium_sort.c \
 	src/algorithms/medium_sort_utils.c \
