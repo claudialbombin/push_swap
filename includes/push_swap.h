@@ -14,6 +14,10 @@
 # define COMPLEX     3
 # define ADAPTIVE    4
 
+# define SMALL_N_MAX     5
+# define MAX_SMALL_STATES 800
+# define MAX_SMALL_MOVES  20
+
 typedef enum e_strategy
 {
 	STRAT_NONE,
@@ -44,6 +48,23 @@ typedef struct s_bench
 	int	rrb;
 	int	rrr;
 }	t_bench;
+
+typedef struct s_state
+{
+	int	a[SMALL_N_MAX];
+	int	a_len;
+	int	b[SMALL_N_MAX];
+	int	b_len;
+	int	parent;
+	int	move;
+}	t_state;
+
+typedef struct s_stacks
+{
+	t_stack	**a;
+	t_stack	**b;
+	t_bench	*bench;
+}	t_stacks;
 
 /* Parser flags */
 int			flag_duplicates(char *flag, int strategy, int bench);
@@ -120,6 +141,16 @@ void		ft_adaptive_sort(t_stack **a, t_stack **b, t_bench *bench);
 void		assign_ranks(t_stack *a);
 int			chunk_length(int size);
 void		rotate_node_to_top(t_stack **a, t_stack *node, t_bench *bench);
+
+/* Optimal small-n sort (size <= SMALL_N_MAX) */
+void		ft_optimal_sort(t_stack **a, t_stack **b, t_bench *bench);
+void		arr_swap(int *arr, int len);
+void		arr_rotate(int *arr, int len);
+void		arr_reverse_rotate(int *arr, int len);
+void		arr_push(int *dest, int *dest_len, int *src, int *src_len);
+void		apply_move(int move_id, t_state *s);
+int			bfs_solve(t_state *states, t_state *start, int size);
+void		apply_solution(t_state *states, int goal, t_stacks *st);
 
 /* Bench */
 void		ft_bench_init(t_bench *bench);
