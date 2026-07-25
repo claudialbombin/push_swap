@@ -1,5 +1,11 @@
 #include "push_swap.h"
 
+/**
+ * @brief Frees every node of a stack.
+ *
+ * @param stack Stack to free.
+ * @return void
+ */
 void	free_stack(t_stack *stack)
 {
 	t_stack	*aux;
@@ -12,6 +18,13 @@ void	free_stack(t_stack *stack)
 	}
 }
 
+/**
+ * @brief Frees both stacks, prints "Error" and exits with status 1.
+ *
+ * @param a Main stack to free before exiting, or NULL.
+ * @param b Auxiliary stack to free before exiting, or NULL.
+ * @return This function never returns; it calls exit(1).
+ */
 void	exit_error(t_stack *a, t_stack *b)
 {
 	free_stack(a);

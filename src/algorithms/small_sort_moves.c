@@ -12,13 +12,19 @@
 
 #include "push_swap.h"
 
-/*
-** Pure array transforms mirroring sa/sb, ra/rb, rra/rrb and pa/pb,
-** but operating on the small fixed-size int arrays a t_state holds
-** instead of the real linked-list stacks. Used only by the BFS
-** search over abstract states; the real stacks are moved separately
-** once the winning sequence of moves is known.
-*/
+/**
+ * @brief Swaps the first two elements of an array, mirroring sa/sb.
+ *
+ * Pure array transform mirroring sa/sb, but operating on the small
+ * fixed-size int arrays a t_state holds instead of the real
+ * linked-list stacks. Used only by the BFS search over abstract
+ * states; the real stacks are moved separately once the winning
+ * sequence of moves is known.
+ *
+ * @param arr Array to modify in place.
+ * @param len Number of valid elements in arr.
+ * @return void
+ */
 void	arr_swap(int *arr, int len)
 {
 	int	tmp;
@@ -30,6 +36,16 @@ void	arr_swap(int *arr, int len)
 	arr[1] = tmp;
 }
 
+/**
+ * @brief Rotates an array upward by one, mirroring ra/rb.
+ *
+ * The first element becomes the last, everything else shifts up by
+ * one position. Used by the BFS search over abstract states.
+ *
+ * @param arr Array to modify in place.
+ * @param len Number of valid elements in arr.
+ * @return void
+ */
 void	arr_rotate(int *arr, int len)
 {
 	int	first;
@@ -47,6 +63,16 @@ void	arr_rotate(int *arr, int len)
 	arr[len - 1] = first;
 }
 
+/**
+ * @brief Rotates an array downward by one, mirroring rra/rrb.
+ *
+ * The last element becomes the first, everything else shifts down by
+ * one position. Used by the BFS search over abstract states.
+ *
+ * @param arr Array to modify in place.
+ * @param len Number of valid elements in arr.
+ * @return void
+ */
 void	arr_reverse_rotate(int *arr, int len)
 {
 	int	last;
@@ -64,6 +90,20 @@ void	arr_reverse_rotate(int *arr, int len)
 	arr[0] = last;
 }
 
+/**
+ * @brief Moves the first element of one array onto another, mirroring
+ * pa/pb.
+ *
+ * Removes src[0], shifting the rest of src down by one, and inserts
+ * that value at dest[0], shifting the rest of dest up by one. Used by
+ * the BFS search over abstract states.
+ *
+ * @param dest Destination array, grown by one element.
+ * @param dest_len Pointer to the number of valid elements in dest.
+ * @param src Source array, shrunk by one element.
+ * @param src_len Pointer to the number of valid elements in src.
+ * @return void
+ */
 void	arr_push(int *dest, int *dest_len, int *src, int *src_len)
 {
 	int	val;
