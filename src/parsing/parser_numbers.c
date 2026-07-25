@@ -1,14 +1,17 @@
 #include "push_swap.h"
 
 /**
- * @brief Parses an array of number strings into a new stack.
+ * @brief Builds the raw stack from every number string, in order.
+ *
+ * Seeds the head node's cached tail pointer once the whole list is
+ * built, so later rotations can find the tail in O(1).
  *
  * @param argv Null-terminated array of number strings.
  * @param a Pointer set to the newly built stack.
  * @return 1 on success; 0 if any string isn't a valid number, is out
- *         of int range, allocation failed, or duplicates were found.
+ *         of int range, or allocation failed.
  */
-int	parse_numbers(char **argv, t_stack **a)
+static int	build_number_stack(char **argv, t_stack **a)
 {
 	int		i;
 	long	nbr;
@@ -31,6 +34,23 @@ int	parse_numbers(char **argv, t_stack **a)
 		add_node(a, &tail, new_node);
 		i++;
 	}
+	if (*a)
+		(*a)->tail = tail;
+	return (1);
+}
+
+/**
+ * @brief Parses an array of number strings into a new stack.
+ *
+ * @param argv Null-terminated array of number strings.
+ * @param a Pointer set to the newly built stack.
+ * @return 1 on success; 0 if any string isn't a valid number, is out
+ *         of int range, allocation failed, or duplicates were found.
+ */
+int	parse_numbers(char **argv, t_stack **a)
+{
+	if (!build_number_stack(argv, a))
+		return (0);
 	if (has_duplicates(*a))
 		return (0);
 	return (1);

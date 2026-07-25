@@ -17,23 +17,27 @@
  *
  * The first element becomes the last one, everything else shifts up
  * by one position. Caller must already have checked the stack has at
- * least 2 elements.
+ * least 2 elements. Runs in O(1): the old head's cached tail says
+ * exactly where to reattach it, no traversal needed.
  *
  * @param s Pointer to the stack to rotate.
  * @return void
  */
 static void	rotate_up(t_stack **s)
 {
-	t_stack	*first;
-	t_stack	*last;
+	t_stack	*old_head;
+	t_stack	*new_head;
+	t_stack	*old_tail;
 
-	first = *s;
-	*s = (*s)->next;
-	last = *s;
-	while (last->next)
-		last = last->next;
-	last->next = first;
-	first->next = NULL;
+	old_head = *s;
+	new_head = old_head->next;
+	old_tail = old_head->tail;
+	new_head->prev = NULL;
+	old_tail->next = old_head;
+	old_head->prev = old_tail;
+	old_head->next = NULL;
+	new_head->tail = old_head;
+	*s = new_head;
 }
 
 /**

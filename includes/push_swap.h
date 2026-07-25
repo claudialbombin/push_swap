@@ -27,11 +27,19 @@ typedef enum e_strategy
 	STRAT_ADAPTIVE
 }	t_strategy;
 
+/*
+** prev is a real, always-accurate back-link (NULL on the head).
+** tail is only meaningful on whichever node is currently the head of
+** its stack: it caches that stack's last node, so ra/rra/sa/pa/pb
+** never need to walk the list to find the tail or the node before it.
+*/
 typedef struct s_stack
 {
 	int				value;
 	int				index;
 	struct s_stack	*next;
+	struct s_stack	*prev;
+	struct s_stack	*tail;
 }	t_stack;
 
 typedef struct s_bench

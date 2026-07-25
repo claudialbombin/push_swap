@@ -15,7 +15,10 @@
 /**
  * @brief Swaps the two top nodes of a stack.
  *
- * Caller must already have checked the stack has >= 2 elements.
+ * Caller must already have checked the stack has >= 2 elements. Runs
+ * in O(1): only relinks the first three nodes and updates the new
+ * head's cached tail (which changes to "first" itself when the stack
+ * has exactly 2 elements, since first is then the new last node).
  *
  * @param s Pointer to the stack whose top two nodes are swapped.
  * @return void
@@ -28,6 +31,15 @@ static void	swap_top(t_stack **s)
 	first = *s;
 	second = first->next;
 	first->next = second->next;
+	if (first->next)
+	{
+		first->next->prev = first;
+		second->tail = first->tail;
+	}
+	else
+		second->tail = first;
+	second->prev = NULL;
+	first->prev = second;
 	second->next = first;
 	*s = second;
 }

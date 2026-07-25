@@ -5,26 +5,27 @@
  *
  * The last element becomes the first one, everything else shifts
  * down by one position. Caller must already have checked the stack
- * has >= 2 elements.
+ * has >= 2 elements. Runs in O(1): the old tail's prev pointer gives
+ * the new tail directly, no traversal needed.
  *
  * @param s Pointer to the stack to rotate.
  * @return void
  */
 static void	rotate_down(t_stack **s)
 {
-	t_stack	*current;
-	t_stack	*prev;
+	t_stack	*old_head;
+	t_stack	*old_tail;
+	t_stack	*new_tail;
 
-	current = *s;
-	prev = NULL;
-	while (current->next)
-	{
-		prev = current;
-		current = current->next;
-	}
-	prev->next = NULL;
-	current->next = *s;
-	*s = current;
+	old_head = *s;
+	old_tail = old_head->tail;
+	new_tail = old_tail->prev;
+	new_tail->next = NULL;
+	old_tail->next = old_head;
+	old_tail->prev = NULL;
+	old_head->prev = old_tail;
+	old_tail->tail = new_tail;
+	*s = old_tail;
 }
 
 /**
