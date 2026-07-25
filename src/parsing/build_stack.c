@@ -1,5 +1,11 @@
 #include "push_swap.h"
 
+/**
+ * @brief Converts a raw strategy flag value into a t_strategy enum.
+ *
+ * @param strategy One of NONE, SIMPLE, MEDIUM, COMPLEX or ADAPTIVE.
+ * @return The matching t_strategy value, or STRAT_NONE if unmatched.
+ */
 static t_strategy	int_to_strategy(int strategy)
 {
 	if (strategy == SIMPLE)
@@ -13,6 +19,14 @@ static t_strategy	int_to_strategy(int strategy)
 	return (STRAT_NONE);
 }
 
+/**
+ * @brief Parses the command-line flags and returns the chosen strategy.
+ *
+ * @param argc Argument count, including the program name.
+ * @param argv Argument vector.
+ * @return The requested t_strategy, or STRAT_NONE if flag parsing
+ *         failed or no strategy flag was passed.
+ */
 t_strategy	ft_parse_strategy(int argc, char **argv)
 {
 	int	strategy;
@@ -25,6 +39,14 @@ t_strategy	ft_parse_strategy(int argc, char **argv)
 	return (int_to_strategy(strategy));
 }
 
+/**
+ * @brief Checks whether --bench was passed on the command line.
+ *
+ * @param argc Argument count, including the program name.
+ * @param argv Argument vector.
+ * @return 1 if --bench was passed, 0 otherwise (including on any
+ *         flag-parsing failure).
+ */
 int	ft_has_bench_flag(int argc, char **argv)
 {
 	int	strategy;
@@ -37,13 +59,18 @@ int	ft_has_bench_flag(int argc, char **argv)
 	return (bench);
 }
 
-/*
-** Parses flags, splits any space-separated numbers inside a
-** single argument, then builds the stack. Any parsing failure
-** (bad flag, bad number, out of range, duplicate) exits the
-** whole program via exit_error, matching the subject's "Error"
-** requirement.
-*/
+/**
+ * @brief Parses the command line and builds the initial stack.
+ *
+ * Parses flags, splits any space-separated numbers inside a single
+ * argument, then builds the stack. Any parsing failure (bad flag, bad
+ * number, out of range, duplicate) exits the whole program via
+ * exit_error, matching the subject's "Error" requirement.
+ *
+ * @param argc Argument count, including the program name.
+ * @param argv Argument vector: flags followed by numbers to sort.
+ * @return The built stack, or NULL if no numbers were given.
+ */
 t_stack	*ft_build_stack(int argc, char **argv)
 {
 	int		strategy;

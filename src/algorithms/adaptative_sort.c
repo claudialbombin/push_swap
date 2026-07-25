@@ -12,12 +12,18 @@
 
 #include "push_swap.h"
 
-/*
-** Picks a strategy based on the disorder index: low disorder
-** tries the O(n) rotation fix first (falling back to the O(n
-** log n) sort if that guess turns out wrong), medium disorder
-** uses the chunk-based sort, high disorder uses radix sort.
-*/
+/**
+ * @brief Sorts stack a, picking a strategy based on its disorder index.
+ *
+ * Low disorder tries the O(n) rotation fix first (falling back to the
+ * O(n log n) sort if that guess turns out wrong), medium disorder uses
+ * the chunk-based sort, high disorder uses radix sort.
+ *
+ * @param a Pointer to the main stack to sort.
+ * @param b Pointer to the auxiliary (initially empty) stack.
+ * @param bench Optional operation counters, or NULL if unused.
+ * @return void
+ */
 void	ft_adaptive_sort(t_stack **a, t_stack **b, t_bench *bench)
 {
 	double	disorder;

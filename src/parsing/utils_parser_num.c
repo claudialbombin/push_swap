@@ -1,5 +1,13 @@
 #include "push_swap.h"
 
+/**
+ * @brief Counts how many space-separated numbers are in the arguments.
+ *
+ * @param argc Argument count, including the program name.
+ * @param argv Argument vector.
+ * @param first_number Index of the first argument holding numbers.
+ * @return Total number of numbers found, or 0 if a split failed.
+ */
 int	count_numbers(int argc, char **argv, int first_number)
 {
 	char	**numbers;
@@ -26,6 +34,19 @@ int	count_numbers(int argc, char **argv, int first_number)
 	return (total);
 }
 
+/**
+ * @brief Flattens the number arguments into one NULL-terminated array.
+ *
+ * Splits every argument on spaces and copies the resulting words into
+ * a single freshly allocated array, so callers don't need to care
+ * whether numbers arrived as separate arguments or packed into one.
+ *
+ * @param argc Argument count, including the program name.
+ * @param argv Argument vector.
+ * @param first_number Index of the first argument holding numbers.
+ * @return Newly allocated, NULL-terminated array of number strings,
+ *         or NULL on allocation or split failure.
+ */
 char	**normalize_args(int argc, char **argv, int first_number)
 {
 	int		total_numbers;
@@ -53,6 +74,15 @@ char	**normalize_args(int argc, char **argv, int first_number)
 	return (new_array);
 }
 
+/**
+ * @brief Copies every string of a split array into a destination array.
+ *
+ * @param new_array Destination array, written starting at *index.
+ * @param split_tmp NULL-terminated source array to copy from.
+ * @param index Pointer to the current write position in new_array,
+ *              advanced by the number of strings copied.
+ * @return void
+ */
 void	copy_split(char **new_array, char **split_tmp, int *index)
 {
 	int	j;
@@ -66,6 +96,12 @@ void	copy_split(char **new_array, char **split_tmp, int *index)
 	}
 }
 
+/**
+ * @brief Frees every string of a NULL-terminated array and the array.
+ *
+ * @param split NULL-terminated array of strings to free, or NULL.
+ * @return void
+ */
 void	free_split(char **split)
 {
 	int	i;

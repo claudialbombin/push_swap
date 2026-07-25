@@ -12,6 +12,12 @@
 
 #include "push_swap.h"
 
+/**
+ * @brief Sums every operation counter into a single total.
+ *
+ * @param bench Bench counters to sum.
+ * @return Total number of operations performed.
+ */
 static int	total_ops(t_bench *bench)
 {
 	return (bench->sa + bench->sb + bench->ss + bench->pa + bench->pb
@@ -19,6 +25,12 @@ static int	total_ops(t_bench *bench)
 		+ bench->rrr);
 }
 
+/**
+ * @brief Prints the sa/sb/ss/pa/pb bench counters line to stderr.
+ *
+ * @param bench Bench counters to print.
+ * @return void
+ */
 static void	print_line_swap_push(t_bench *bench)
 {
 	ft_put_str_fd("[bench] sa: ", 2);
@@ -34,6 +46,12 @@ static void	print_line_swap_push(t_bench *bench)
 	ft_put_str_fd("\n", 2);
 }
 
+/**
+ * @brief Prints the ra/rb/rr/rra/rrb/rrr bench counters line to stderr.
+ *
+ * @param bench Bench counters to print.
+ * @return void
+ */
 static void	print_line_rotate(t_bench *bench)
 {
 	ft_put_str_fd("[bench] ra: ", 2);
@@ -51,13 +69,20 @@ static void	print_line_rotate(t_bench *bench)
 	ft_put_str_fd("\n", 2);
 }
 
-/*
-** Prints the full --bench report to stderr, matching the
-** subject's example format. "strategy" comes in already built
-** as one string (eg. "Adaptive / O(n^2)") because the exact
-** label depends on which internal method got picked, and that
-** decision is made in main.c, not here.
-*/
+/**
+ * @brief Prints the full --bench report to stderr.
+ *
+ * Matches the subject's example format. "strategy" comes in already
+ * built as one string (eg. "Adaptive / O(n^2)") because the exact
+ * label depends on which internal method got picked, and that
+ * decision is made in main.c, not here.
+ *
+ * @param disorder Disorder index computed before sorting.
+ * @param strategy Human-readable strategy label already built by
+ *                  the caller.
+ * @param bench Bench counters to print.
+ * @return void
+ */
 void	ft_print_bench(double disorder, char *strategy, t_bench *bench)
 {
 	ft_put_str_fd("[bench] disorder: ", 2);

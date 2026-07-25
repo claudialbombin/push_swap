@@ -12,10 +12,14 @@
 
 #include "push_swap.h"
 
-/*
-** Swaps the two top nodes of a stack.
-** Caller must already have checked the stack has >= 2 elements.
-*/
+/**
+ * @brief Swaps the two top nodes of a stack.
+ *
+ * Caller must already have checked the stack has >= 2 elements.
+ *
+ * @param s Pointer to the stack whose top two nodes are swapped.
+ * @return void
+ */
 static void	swap_top(t_stack **s)
 {
 	t_stack	*first;
@@ -28,6 +32,16 @@ static void	swap_top(t_stack **s)
 	*s = second;
 }
 
+/**
+ * @brief Swaps the two top nodes of stack a.
+ *
+ * Does nothing if a has fewer than 2 elements.
+ *
+ * @param a Pointer to the stack to swap.
+ * @param print 1 to print "sa\n" to stdout, 0 to stay silent.
+ * @param bench Optional operation counter, or NULL if unused.
+ * @return void
+ */
 void	ft_sa(t_stack **a, int print, t_bench *bench)
 {
 	if (!*a || !(*a)->next)
@@ -39,6 +53,16 @@ void	ft_sa(t_stack **a, int print, t_bench *bench)
 		write(1, "sa\n", 3);
 }
 
+/**
+ * @brief Swaps the two top nodes of stack b.
+ *
+ * Does nothing if b has fewer than 2 elements.
+ *
+ * @param b Pointer to the stack to swap.
+ * @param print 1 to print "sb\n" to stdout, 0 to stay silent.
+ * @param bench Optional operation counter, or NULL if unused.
+ * @return void
+ */
 void	ft_sb(t_stack **b, int print, t_bench *bench)
 {
 	if (!*b || !(*b)->next)
@@ -50,10 +74,18 @@ void	ft_sb(t_stack **b, int print, t_bench *bench)
 		write(1, "sb\n", 3);
 }
 
-/*
-** ss does sa and sb at the same time, printing (and counting)
-** just one combined operation instead of two.
-*/
+/**
+ * @brief Swaps the two top nodes of both stacks a and b at once.
+ *
+ * ss does sa and sb at the same time, printing (and counting) just
+ * one combined operation instead of two.
+ *
+ * @param a Pointer to the first stack to swap.
+ * @param b Pointer to the second stack to swap.
+ * @param print 1 to print "ss\n" to stdout, 0 to stay silent.
+ * @param bench Optional operation counter, or NULL if unused.
+ * @return void
+ */
 void	ft_ss(t_stack **a, t_stack **b, int print, t_bench *bench)
 {
 	if (*a && (*a)->next)
