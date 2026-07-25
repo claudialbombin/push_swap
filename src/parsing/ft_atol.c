@@ -1,5 +1,16 @@
 #include "push_swap.h"
 
+/**
+ * @brief Reads consecutive decimal digits and applies a sign.
+ *
+ * Clamps to LONG_MAX / LONG_MIN on overflow instead of wrapping.
+ *
+ * @param str String being parsed.
+ * @param i Pointer to the current index into str, advanced past
+ *          every digit consumed.
+ * @param sign 1 for positive, -1 for negative.
+ * @return The parsed value, signed and clamped to the long range.
+ */
 static long	read_digits(const char *str, int *i, int sign)
 {
 	long	result;
@@ -21,6 +32,13 @@ static long	read_digits(const char *str, int *i, int sign)
 	return (result * sign);
 }
 
+/**
+ * @brief Converts a string to a long, skipping leading whitespace.
+ *
+ * @param str Null-terminated string to convert.
+ * @return The parsed long value, clamped to LONG_MAX / LONG_MIN on
+ *         overflow.
+ */
 long	ft_atol(const char *str)
 {
 	int	i;

@@ -1,10 +1,15 @@
 #include "push_swap.h"
 
-/*
-** Reverse rotates a stack downwards: the last element becomes
-** the first one, everything else shifts down by one position.
-** Caller must already have checked the stack has >= 2 elements.
-*/
+/**
+ * @brief Reverse rotates a stack downwards by one position.
+ *
+ * The last element becomes the first one, everything else shifts
+ * down by one position. Caller must already have checked the stack
+ * has >= 2 elements.
+ *
+ * @param s Pointer to the stack to rotate.
+ * @return void
+ */
 static void	rotate_down(t_stack **s)
 {
 	t_stack	*current;
@@ -22,6 +27,16 @@ static void	rotate_down(t_stack **s)
 	*s = current;
 }
 
+/**
+ * @brief Reverse rotates stack a by one position.
+ *
+ * Does nothing if a has fewer than 2 elements.
+ *
+ * @param a Pointer to the stack to rotate.
+ * @param print 1 to print "rra\n" to stdout, 0 to stay silent.
+ * @param bench Optional operation counter, or NULL if unused.
+ * @return void
+ */
 void	ft_rra(t_stack **a, int print, t_bench *bench)
 {
 	if (!*a || !(*a)->next)
@@ -33,6 +48,16 @@ void	ft_rra(t_stack **a, int print, t_bench *bench)
 		write(1, "rra\n", 4);
 }
 
+/**
+ * @brief Reverse rotates stack b by one position.
+ *
+ * Does nothing if b has fewer than 2 elements.
+ *
+ * @param b Pointer to the stack to rotate.
+ * @param print 1 to print "rrb\n" to stdout, 0 to stay silent.
+ * @param bench Optional operation counter, or NULL if unused.
+ * @return void
+ */
 void	ft_rrb(t_stack **b, int print, t_bench *bench)
 {
 	if (!*b || !(*b)->next)
@@ -44,10 +69,18 @@ void	ft_rrb(t_stack **b, int print, t_bench *bench)
 		write(1, "rrb\n", 4);
 }
 
-/*
-** rrr does rra and rrb at the same time, printing (and counting)
-** just one combined operation instead of two.
-*/
+/**
+ * @brief Reverse rotates both stacks a and b at the same time.
+ *
+ * rrr does rra and rrb at the same time, printing (and counting) just
+ * one combined operation instead of two.
+ *
+ * @param a Pointer to the first stack to rotate.
+ * @param b Pointer to the second stack to rotate.
+ * @param print 1 to print "rrr\n" to stdout, 0 to stay silent.
+ * @param bench Optional operation counter, or NULL if unused.
+ * @return void
+ */
 void	ft_rrr(t_stack **a, t_stack **b, int print, t_bench *bench)
 {
 	if (*a && (*a)->next)

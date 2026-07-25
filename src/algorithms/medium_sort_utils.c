@@ -12,11 +12,16 @@
 
 #include "push_swap.h"
 
-/*
-** Same rank trick as complex_sort: gives every node its rank
-** (0 to size - 1) instead of its raw value, so ranks can be
-** grouped into chunks.
-*/
+/**
+ * @brief Assigns each node its rank based on relative value order.
+ *
+ * Same rank trick as complex_sort: gives every node its rank (0 to
+ * size - 1) instead of its raw value, so ranks can be grouped into
+ * chunks.
+ *
+ * @param a Stack whose nodes get their index field filled in.
+ * @return void
+ */
 void	assign_ranks(t_stack *a)
 {
 	t_stack	*current;
@@ -39,10 +44,15 @@ void	assign_ranks(t_stack *a)
 	}
 }
 
-/*
-** Smallest chunk length whose square covers "size", so the
-** stack ends up split into roughly sqrt(size) chunks.
-*/
+/**
+ * @brief Computes the chunk length used to split ranks for medium sort.
+ *
+ * Smallest chunk length whose square covers "size", so the stack ends
+ * up split into roughly sqrt(size) chunks.
+ *
+ * @param size Number of elements in the stack.
+ * @return Chunk length to use.
+ */
 int	chunk_length(int size)
 {
 	int	chunk;
@@ -53,10 +63,16 @@ int	chunk_length(int size)
 	return (chunk);
 }
 
-/*
-** Rotates a until "node" reaches the top, picking whichever
-** direction (ra or rra) needs fewer moves.
-*/
+/**
+ * @brief Rotates a stack until a given node reaches the top.
+ *
+ * Picks whichever direction (ra or rra) needs fewer moves.
+ *
+ * @param a Pointer to the stack to rotate.
+ * @param node Node to bring to the top; must belong to *a.
+ * @param bench Optional operation counters, or NULL if unused.
+ * @return void
+ */
 void	rotate_node_to_top(t_stack **a, t_stack *node, t_bench *bench)
 {
 	t_stack	*current;

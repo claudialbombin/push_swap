@@ -1,5 +1,14 @@
 #include "push_swap.h"
 
+/**
+ * @brief Checks whether a flag was already set previously.
+ *
+ * @param flag Flag string being checked (eg. "--simple", "--bench").
+ * @param strategy Strategy already selected so far, or NONE.
+ * @param bench 1 if --bench was already seen, 0 otherwise.
+ * @return 1 if flag duplicates an already-set strategy or --bench,
+ *         0 otherwise.
+ */
 int	flag_duplicates(char *flag, int strategy, int bench)
 {
 	if (ft_strcmp(flag, "--simple") == 0
@@ -18,6 +27,13 @@ int	flag_duplicates(char *flag, int strategy, int bench)
 	return (0);
 }
 
+/**
+ * @brief Matches a flag string to a strategy and stores it.
+ *
+ * @param flag Flag string being checked.
+ * @param strategy Pointer updated with the matching strategy value.
+ * @return 1 if flag matched a strategy flag, 0 otherwise.
+ */
 int	set_strategy(char *flag, int *strategy)
 {
 	if (ft_strcmp(flag, "--simple") == 0)
@@ -33,6 +49,19 @@ int	set_strategy(char *flag, int *strategy)
 	return (1);
 }
 
+/**
+ * @brief Parses every leading "--flag" argument.
+ *
+ * Stops at the first argument that isn't a recognised flag, which is
+ * assumed to be the start of the numbers to sort.
+ *
+ * @param argc Argument count, including the program name.
+ * @param argv Argument vector.
+ * @param strategy Pointer updated with the requested strategy.
+ * @param bench Pointer updated to 1 if --bench was passed.
+ * @return Index of the first non-flag argument, or -1 on an unknown
+ *         or duplicate flag.
+ */
 int	parse_flags(int argc, char **argv, int *strategy, int *bench)
 {
 	int	i;

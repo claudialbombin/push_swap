@@ -12,10 +12,17 @@
 
 #include "push_swap.h"
 
-/*
-** Brings the node at "index" (from the top) to the top of a,
-** choosing whichever rotation direction needs fewer moves.
-*/
+/**
+ * @brief Brings the node at a given position to the top of a.
+ *
+ * Chooses whichever rotation direction needs fewer moves.
+ *
+ * @param a Pointer to the stack to rotate.
+ * @param index Position (from the top) of the node to bring up.
+ * @param size Number of elements in the stack.
+ * @param bench Optional operation counters, or NULL if unused.
+ * @return void
+ */
 static void	rotate_to_top(t_stack **a, int index, int size, t_bench *bench)
 {
 	if (index <= size - index)
@@ -37,13 +44,19 @@ static void	rotate_to_top(t_stack **a, int index, int size, t_bench *bench)
 	}
 }
 
-/*
-** O(n^2) sort: n times, finds the current minimum of a,
-** rotates it to the top and pushes it to b. The very last
-** element left in a is automatically the maximum, so we stop
-** at size 1 instead of moving it too. Finally, pushes
-** everything back from b to a in the right order.
-*/
+/**
+ * @brief Sorts stack a in O(n^2) using a selection-sort approach.
+ *
+ * n times, finds the current minimum of a, rotates it to the top and
+ * pushes it to b. The very last element left in a is automatically
+ * the maximum, so it stops at size 1 instead of moving it too.
+ * Finally, pushes everything back from b to a in the right order.
+ *
+ * @param a Pointer to the main stack to sort.
+ * @param b Pointer to the auxiliary (initially empty) stack.
+ * @param bench Optional operation counters, or NULL if unused.
+ * @return void
+ */
 void	ft_simple_sort(t_stack **a, t_stack **b, t_bench *bench)
 {
 	int	size;
