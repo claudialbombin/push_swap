@@ -148,7 +148,9 @@ void		ft_adaptive_sort(t_stack **a, t_stack **b, t_bench *bench);
 /* Medium sort helpers */
 void		assign_ranks(t_stack *a);
 int			chunk_length(int size);
-void		rotate_node_to_top(t_stack **a, t_stack *node, t_bench *bench);
+void		extract_chunk(t_stack **a, t_stack **b, int *bounds,
+				t_bench *bench);
+void		drain_chunk_sorted(t_stack **a, t_stack **b, t_bench *bench);
 
 /* Optimal small-n sort (size <= SMALL_N_MAX) */
 void		ft_optimal_sort(t_stack **a, t_stack **b, t_bench *bench);
