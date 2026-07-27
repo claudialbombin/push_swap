@@ -88,13 +88,21 @@ push_swap/
 ├── Makefile
 ├── README.md
 ├── includes/
-│   └── push_swap.h
+│   ├── push_swap.h
+│   └── checker_bonus.h
 ├── src/
 │   ├── main.c
 │   ├── parsing/
-│   │   ├── parse_args.c
-│   │   ├── parse_flags.c
-│   │   └── parse_errors.c
+│   │   ├── build_stack.c
+│   │   ├── parser_flags.c
+│   │   ├── parser_numbers.c
+│   │   ├── nodes.c
+│   │   ├── split.c
+│   │   ├── ft_atol.c
+│   │   ├── utils_parser_num.c
+│   │   ├── utils.c
+│   │   ├── libft_utils.c
+│   │   └── errors_stack.c
 │   ├── stack_ops/
 │   │   ├── ops_swap.c
 │   │   ├── ops_push.c
@@ -103,14 +111,23 @@ push_swap/
 │   ├── algorithms/
 │   │   ├── disorder_index.c
 │   │   ├── simple_sort.c
+│   │   ├── linear_sort.c
 │   │   ├── medium_sort.c
+│   │   ├── medium_sort_extract.c
+│   │   ├── medium_sort_chunk_sort.c
+│   │   ├── medium_sort_utils.c
 │   │   ├── complex_sort.c
-│   │   ├── adaptive_sort.c
+│   │   ├── adaptative_sort.c
+│   │   ├── small_sort*.c        (exhaustive-search optimal sort, n <= 5)
 │   │   └── sort_utils.c
-│   └── bench/
-│       ├── bench.c
-│       └── bench_utils.c
-└── checker_bonus/
+│   ├── bench/
+│   │   ├── bench.c
+│   │   └── bench_utils.c
+│   └── checker_bonus/           (bonus, see "Checker (bonus)" below)
+│       ├── checker_bonus.c
+│       ├── read_stdin_bonus.c
+│       └── exec_instr_bonus.c
+└── checker_Mac                  (reference binary supplied by the subject)
 ```
 
 ## Algorithms
@@ -156,18 +173,45 @@ correct.
 
 ### Medium sort — O(n√n)
 
-Each value is mapped to its rank (0 to n-1), and ranks are split into
-approximately √n chunks. Chunks are processed from lowest to highest rank;
-within each chunk, the algorithm repeatedly scans `a` for the node with the
-smallest remaining rank in that chunk's range, rotates it to the top
-(`ra`/`rra`, whichever is shorter), and pushes it to `b`. Once every chunk
-has gone through, `b` holds every rank in descending order (highest on
-top) — ready to be unloaded straight back into `a` with `pa`, restoring
-ascending order.
+Each value is mapped to its rank (0 to n-1), and ranks are split into chunks
+(see the chunk size note below). Chunks are processed from highest to lowest
+rank; for each one:
+
+1. **Extract** the chunk in a single bounded pass over `a` (`extract_chunk`,
+   the same technique `complex_sort`'s bit passes use, applied to a rank
+   range instead of a bit): every element currently in `a` is looked at
+   exactly once — `pb` if its rank falls in the chunk, `ra` otherwise — so
+   this always costs exactly the current size of `a`, never more, no matter
+   how many elements match.
+2. **Sort that isolated chunk** entirely within `b` (`drain_chunk_sorted`):
+   repeatedly find the current max among the chunk's (at most √n-ish)
+   elements, rotate it to the top of `b`, and `pa` it onto `a`. Because the
+   picks happen highest-to-lowest, each chunk's own values end up ascending
+   from the top once its turn is done.
+
+Processing chunks highest rank first means each finished chunk sits directly
+on top of `a`, and the next (lower) chunk's extraction pass simply rotates
+straight past that already-sorted portion — so by the time the lowest chunk
+is placed, `a` is fully sorted with nothing left to unload from `b`.
 
 - **Space:** O(1) extra.
-- **Time (operations):** √n chunks, each selecting and rotating up to √n
-  elements, giving O(n√n) operations overall.
+- **Time (operations):** each of the `n / chunk` extraction passes costs the
+  current size of `a` (it does not shrink between chunks — see the chunk
+  size note), and each isolated chunk costs O(chunk²) to sort internally;
+  summed over every chunk this is `O(n² / chunk + n·chunk)`, which is
+  `O(n√n)` for any `chunk = Θ(√n)`.
+
+**Chunk size note:** a plain `chunk = √n` minimizes the two terms above
+*in theory*, but not in practice, because they don't carry equal real
+weight — the `n² / chunk` extraction term dominates (it never shrinks
+between chunks), while the `n·chunk` internal-sort term is comparatively
+cheap. Minimizing `D·n²/chunk + C·n·chunk` for the true measured constants
+(`D ≈ 1`, `C ≈ 0.13`, fit against actual `--bench` output) gives an optimum
+around `chunk ≈ 3√n`, not `√n`. Empirically this cuts the worst-case
+operation count for 500 random numbers from ~13 000 down to ~9 000 — the
+difference between failing and comfortably clearing the subject's
+12 000-operation minimum (see VI.6). `chunk_length()` implements this tuned
+formula (`chunk² ≥ 9n`), not the naive one.
 
 ### Complex sort — O(n log n)
 
@@ -218,6 +262,53 @@ at the start:
   chunk-based sort, giving a middle-ground operation count that fits inputs
   that are partially, but not extremely, shuffled.
 
+## Bonus: checker
+
+`checker` verifies that a sequence of push_swap operations actually sorts a
+given stack, per the subject's bonus specification (VIII.1). It is not built
+by `make`/`make all` — build it separately with `make bonus`.
+
+### Usage
+
+```
+./push_swap 2 1 3 6 5 8 | ./checker 2 1 3 6 5 8
+```
+
+- Takes stack `a` as a list of integers, same argument format (and the same
+  parsing/validation) as `push_swap` — the first argument is the top of the
+  stack.
+- Reads a sequence of instructions from `stdin`, one per line, until EOF.
+- Applies each instruction to the stack, then prints to `stdout`:
+  - **`OK`** if `a` ends up sorted ascending and `b` is empty;
+  - **`KO`** otherwise.
+- On error (non-integer or out-of-range arguments, duplicate values, or an
+  instruction that isn't one of the 11 valid ones / is malformed) it prints
+  `Error` to `stderr` instead, matching `push_swap`'s own error contract.
+  With no arguments at all, it prints nothing and exits immediately.
+
+### Implementation
+
+`checker` deliberately shares almost all of its code with `push_swap` rather
+than reimplementing stack parsing or the 11 operations from scratch:
+`ft_build_stack` builds the stack from `argv` exactly as `push_swap` does,
+and each instruction line is dispatched straight to the real `ft_sa`, `ft_pa`,
+`ft_ra`, ... entry points that actually mutate the stacks — with printing and
+bench-counting turned off (`print = 0`, `bench = NULL`), both parameters
+those functions already take for every caller, so no change to the mandatory
+code was needed to reuse them here. Only three pieces are checker-specific:
+reading the whole of `stdin` into a buffer (`checker_read_stdin`, since
+`realloc` isn't in the subject's authorized function list, so the buffer is
+grown by allocating a new block and copying, not resizing in place),
+splitting it into instruction lines, and matching each line against the 11
+valid instruction names (`checker_apply_line`).
+
+### Verification
+
+Checked against the reference `checker_Mac` binary supplied with the subject:
+piping real `push_swap` output for randomized stacks (sizes 0–500) through
+both always agrees; deliberately shuffled (incorrect) instruction sequences
+agree on `KO`; every error case (non-integer/out-of-range/duplicate
+arguments, unknown or malformed instructions) agrees on `Error`.
 
 ## Resources
 
