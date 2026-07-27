@@ -40,6 +40,8 @@ SRC =	src/main.c \
 	src/algorithms/simple_sort.c \
 	src/algorithms/medium_sort.c \
 	src/algorithms/medium_sort_utils.c \
+	src/algorithms/medium_sort_extract.c \
+	src/algorithms/medium_sort_chunk_sort.c \
 	src/algorithms/complex_sort.c \
 	src/algorithms/adaptative_sort.c \
 	src/algorithms/sort_utils.c \
@@ -47,15 +49,42 @@ SRC =	src/main.c \
 	src/bench/bench.c \
 	src/bench/bench_utils.c
 
+NAME_CHECKER = checker
+
+CHECKER_SRC =	src/checker_bonus/checker_bonus.c \
+	src/checker_bonus/read_stdin_bonus.c \
+	src/checker_bonus/exec_instr_bonus.c \
+	src/parsing/parser_flags.c \
+	src/parsing/parser_numbers.c \
+	src/parsing/build_stack.c \
+	src/parsing/nodes.c \
+	src/parsing/errors_stack.c \
+	src/parsing/split.c \
+	src/parsing/utils.c \
+	src/parsing/ft_atol.c \
+	src/parsing/utils_parser_num.c \
+	src/parsing/libft_utils.c \
+	src/stack_ops/ops_push.c \
+	src/stack_ops/ops_swap.c \
+	src/stack_ops/ops_rotate.c \
+	src/stack_ops/ops_reverse.c \
+	src/algorithms/sort_utils.c
+
 OBJ_DIR = obj
 OBJ = $(SRC:src/%.c=$(OBJ_DIR)/%.o)
+CHECKER_OBJ = $(CHECKER_SRC:src/%.c=$(OBJ_DIR)/%.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
-$(OBJ_DIR)/%.o: src/%.c includes/push_swap.h
+bonus: $(NAME_CHECKER)
+
+$(NAME_CHECKER): $(CHECKER_OBJ)
+	$(CC) $(CFLAGS) $(CHECKER_OBJ) -o $(NAME_CHECKER)
+
+$(OBJ_DIR)/%.o: src/%.c includes/push_swap.h includes/checker_bonus.h
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
@@ -63,8 +92,8 @@ clean:
 	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(NAME_CHECKER)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all bonus clean fclean re

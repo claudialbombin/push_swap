@@ -6,82 +6,52 @@
 /*   By: clopez-b <clopez-b@student.42madrid.com>    +#+  +:+       +#+       */
 /*                                                 +#+#+#+#+#+   +#+          */
 /*   Created: 2026/07/23 00:00:00 by clopez-b          #+#    #+#             */
-/*   Updated: 2026/07/24 00:00:00 by clopez-b         ###   ########.fr       */
+/*   Updated: 2026/07/27 00:00:00 by clopez-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
 /**
- * @brief Finds the node with the smallest rank inside a range.
+ * @brief Sorts every chunk of ranks, highest range first.
  *
- * Searches only among ranks in [lower, upper], or, with
- * upper == INT_MAX, among every remaining node in a.
- *
- * @param a Stack to search.
- * @param lower Lowest rank accepted (inclusive).
- * @param upper Highest rank accepted (inclusive).
- * @return The matching node, or NULL if the chunk is exhausted.
- */
-static t_stack	*find_min_in_range(t_stack *a, int lower, int upper)
-{
-	t_stack	*best;
-
-	best = NULL;
-	while (a)
-	{
-		if (a->index >= lower && a->index <= upper
-			&& (!best || a->index < best->index))
-			best = a;
-		a = a->next;
-	}
-	return (best);
-}
-
-/**
- * @brief Pushes every chunk of a into b, ordered low rank to high.
- *
- * Pushes every element of one chunk into b, ranks low to high, before
- * moving on to the next chunk. Once every chunk has gone through, b
- * ends up with the highest rank on top - ready to be unloaded straight
- * into a.
+ * cfg[0] is the chunk length, cfg[1] the total size. Each chunk is
+ * isolated into b in one bounded pass (extract_chunk) and drained
+ * straight back into a, sorted (drain_chunk_sorted) - so a always
+ * ends the loop with every chunk handled so far sitting correctly
+ * ordered on top, and the next (lower) chunk's extraction pass
+ * simply rotates straight past that already-sorted portion.
  *
  * @param a Pointer to the main stack.
  * @param b Pointer to the auxiliary (initially empty) stack.
- * @param chunk Size of each chunk of ranks.
+ * @param cfg Two-element array: cfg[0] = chunk length, cfg[1] = size.
  * @param bench Optional operation counters, or NULL if unused.
  * @return void
  */
-static void	sort_by_chunks(t_stack **a, t_stack **b, int chunk,
-		t_bench *bench)
+static void	sort_by_chunks(t_stack **a, t_stack **b, int *cfg, t_bench *bench)
 {
-	int		lower;
-	int		upper;
-	t_stack	*node;
+	int	bounds[2];
 
-	lower = 0;
-	while (find_min_in_range(*a, lower, INT_MAX))
+	bounds[1] = cfg[1] - 1;
+	while (bounds[1] >= 0)
 	{
-		upper = lower + chunk - 1;
-		node = find_min_in_range(*a, lower, upper);
-		while (node)
-		{
-			rotate_node_to_top(a, node, bench);
-			ft_pb(a, b, 1, bench);
-			node = find_min_in_range(*a, lower, upper);
-		}
-		lower += chunk;
+		bounds[0] = bounds[1] - cfg[0] + 1;
+		if (bounds[0] < 0)
+			bounds[0] = 0;
+		extract_chunk(a, b, bounds, bench);
+		drain_chunk_sorted(a, b, bench);
+		bounds[1] = bounds[0] - 1;
 	}
 }
 
 /**
  * @brief Sorts stack a in O(n * sqrt(n)) using a chunk-based sort.
  *
- * Splits the ranks into chunks of about sqrt(n) elements. Chunks are
- * processed from lowest to highest rank and, inside a chunk, ranks
- * are also pushed low to high. That leaves b sorted with the highest
- * rank on top, which is exactly what's needed to unload it back into
- * a in ascending order with straight pa calls.
+ * Splits the ranks into roughly sqrt(n) chunks. Every chunk-extraction
+ * pass costs exactly the current size of a (bounded, see
+ * extract_chunk), giving O(n * sqrt(n)) for that part; sorting each
+ * isolated chunk of ~sqrt(n) elements costs O(sqrt(n)^2) = O(n), which
+ * also sums to O(n * sqrt(n)) across all chunks.
  *
  * @param a Pointer to the main stack to sort.
  * @param b Pointer to the auxiliary (initially empty) stack.
@@ -90,15 +60,12 @@ static void	sort_by_chunks(t_stack **a, t_stack **b, int chunk,
  */
 void	ft_medium_sort(t_stack **a, t_stack **b, t_bench *bench)
 {
-	int	size;
-	int	chunk;
+	int	cfg[2];
 
 	if (ft_is_sorted(*a))
 		return ;
-	size = ft_stack_size(*a);
 	assign_ranks(*a);
-	chunk = chunk_length(size);
-	sort_by_chunks(a, b, chunk, bench);
-	while (*b)
-		ft_pa(a, b, 1, bench);
+	cfg[1] = ft_stack_size(*a);
+	cfg[0] = chunk_length(cfg[1]);
+	sort_by_chunks(a, b, cfg, bench);
 }
